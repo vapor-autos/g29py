@@ -1,0 +1,21 @@
+name: Build Docker Container
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker container
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: etc/Dockerfile
+          tags: g29-py:latest
