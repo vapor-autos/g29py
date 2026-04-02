@@ -88,6 +88,8 @@ Rule of thumb:
 | `R3`    | 0/1   |
 | `L2`    | 0/1   |
 | `L3`    | 0/1   |
+| `right_paddle` | 0/1 |
+| `left_paddle` | 0/1 |
 | `Share` | 0/1   |
 | `Options` | 0/1 |
 | `+`     | 0/1   |
@@ -116,6 +118,8 @@ state = {
         "R3": 0,
         "L2": 0,
         "L3": 0,
+        "right_paddle": 0,
+        "left_paddle": 0,
         "Share": 0,
         "Options": 0,
         "+": 0,
@@ -155,7 +159,7 @@ Current event shapes:
 | `set_autocenter`  | `ccw_proportion=0.5, cw_proportion=0.5, force=0.5` | `ccw_proportion`: float (0-1), `cw_proportion`: float (0-1), `force`: float (0-1) |
 | `set_anticenter`  | `slot=1, cw_angle=180, ccw_angle=180, cw_proportion=0.5, ccw_proportion=0.5, cw_reverse=False, ccw_reverse=False, force=0.5` | `slot`: int (1-4), `cw_angle`: int (0-255), `ccw_angle`: int (0-255), `cw_proportion`: float (0-1), `ccw_proportion`: float (0-1), `cw_reverse`: bool, `ccw_reverse`: bool, `force`: float (0-1) |
 | `autocenter_off`  | None                                       | None                             |
-| `force_off`       | `slot=0xf3`                                | `slot`: hexadecimal              |
+| `force_off`       | `slot=0xf3`                                | `slot`: int off-mask / slot command (`0xf3` clears active force effects) |
 
 ## Sources
 
