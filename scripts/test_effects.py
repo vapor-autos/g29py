@@ -73,8 +73,8 @@ def build_parser():
 
     anticenter = subparsers.add_parser("set_anticenter")
     anticenter.add_argument("--slot", type=int, default=1)
-    anticenter.add_argument("--cw-angle", type=int, default=180)
-    anticenter.add_argument("--ccw-angle", type=int, default=180)
+    anticenter.add_argument("--cw-position", type=float, default=0.5)
+    anticenter.add_argument("--ccw-position", type=float, default=0.5)
     anticenter.add_argument("--cw-proportion", type=float, default=0.5)
     anticenter.add_argument("--ccw-proportion", type=float, default=0.5)
     anticenter.add_argument("--cw-reverse", action="store_true")
@@ -161,6 +161,8 @@ def main():
         log_write("cleanup", [0xF5, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
         g29.autocenter_off()
     elif args.command == "set_anticenter":
+        cw_position = round(int(args.cw_position * 255))
+        ccw_position = round(int(args.ccw_position * 255))
         cw_proportion = round(int(args.cw_proportion * 15))
         ccw_proportion = round(int(args.ccw_proportion * 15))
         cw_reverse = 0x1 if args.cw_reverse else 0x0
@@ -171,17 +173,17 @@ def main():
         slot_command = ((1 << (args.slot - 1)) << 4) | 0x01
         log_write(
             "write",
-            [slot_command, 0x01, args.cw_angle, args.ccw_angle, proportion_byte, reverse_byte, force],
+            [slot_command, 0x01, cw_position, ccw_position, proportion_byte, reverse_byte, force],
         )
         print(
-            f"args: slot={args.slot} subtype=0x01 cw_angle={args.cw_angle} ccw_angle={args.ccw_angle} "
+            f"args: slot={args.slot} subtype=0x01 cw_position={cw_position} ccw_position={ccw_position} "
             f"cw_proportion={cw_proportion} ccw_proportion={ccw_proportion} "
             f"cw_reverse={cw_reverse} ccw_reverse={ccw_reverse} force={force}"
         )
         g29.set_anticenter(
             slot=args.slot,
-            cw_angle=args.cw_angle,
-            ccw_angle=args.ccw_angle,
+            cw_position=args.cw_position,
+            ccw_position=args.ccw_position,
             cw_proportion=args.cw_proportion,
             ccw_proportion=args.ccw_proportion,
             cw_reverse=args.cw_reverse,

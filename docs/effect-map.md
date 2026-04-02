@@ -77,15 +77,15 @@
 - payload
   - byte 1 = slot command
   - byte 2 = `0x01`
-  - byte 3 = `cw_angle`
-  - byte 4 = `ccw_angle`
+  - byte 3 = `cw_position`
+  - byte 4 = `ccw_position`
   - byte 5 = `(cw_proportion << 4) | ccw_proportion`
   - byte 6 = `(cw_reverse << 4) | ccw_reverse`
   - byte 7 = `force`
 - public ranges
   - `slot`: `1..4`
-  - `cw_angle`: `0..255`
-  - `ccw_angle`: `0..255`
+  - `cw_position`: `0.0..1.0` inclusive, scaled to `0x00..0xff`
+  - `ccw_position`: `0.0..1.0` inclusive, scaled to `0x00..0xff`
   - `cw_proportion`: `0.0..1.0` inclusive, scaled to `0x00..0x0f`
   - `ccw_proportion`: `0.0..1.0` inclusive, scaled to `0x00..0x0f`
   - `cw_reverse`: `False` / `True`, scaled to `0x0` / `0x1`

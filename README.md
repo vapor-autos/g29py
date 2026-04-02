@@ -147,7 +147,7 @@ Current event shapes:
 | `set_friction`    | `val=0.5`                                  | `val`: float                     |
 | `set_range`       | `val=400`                                  | `val`: int (400-900)             |
 | `set_autocenter`  | `ccw_proportion=0.5, cw_proportion=0.5, force=0.5` | `ccw_proportion`: float (0-1), `cw_proportion`: float (0-1), `force`: float (0-1) |
-| `set_anticenter`  | `slot=1, cw_angle=180, ccw_angle=180, cw_proportion=0.5, ccw_proportion=0.5, cw_reverse=False, ccw_reverse=False, force=0.5` | `slot`: int (1-4), `cw_angle`: int (0-255), `ccw_angle`: int (0-255), `cw_proportion`: float (0-1), `ccw_proportion`: float (0-1), `cw_reverse`: bool, `ccw_reverse`: bool, `force`: float (0-1) |
+| `set_anticenter`  | `slot=1, cw_position=0.5, ccw_position=0.5, cw_proportion=0.5, ccw_proportion=0.5, cw_reverse=False, ccw_reverse=False, force=0.5` | `slot`: int (1-4), `cw_position`: float (0-1), `ccw_position`: float (0-1), `cw_proportion`: float (0-1), `ccw_proportion`: float (0-1), `cw_reverse`: bool, `ccw_reverse`: bool, `force`: float (0-1) |
 | `autocenter_off`  | None                                       | None                             |
 | `force_off`       | `slot=0xf3`                                | `slot`: int off-mask / slot command (`0xf3` clears active force effects) |
 

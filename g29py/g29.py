@@ -150,8 +150,8 @@ class G29:
     def set_anticenter(
         self,
         slot=1,
-        cw_angle=180,
-        ccw_angle=180,
+        cw_position=0.5,
+        ccw_position=0.5,
         cw_proportion=0.5,
         ccw_proportion=0.5,
         cw_reverse=False,
@@ -162,8 +162,8 @@ class G29:
 
         Args:
             slot (int, optional): effect slot 1..4.
-            cw_angle (int, optional): 0..255 clockwise angle.
-            ccw_angle (int, optional): 0..255 anti-clockwise angle.
+            cw_position (float, optional): 0..1 clockwise position.
+            ccw_position (float, optional): 0..1 anti-clockwise position.
             cw_proportion (float, optional): 0..1 clockwise proportion.
             ccw_proportion (float, optional): 0..1 anti-clockwise proportion.
             cw_reverse (bool, optional): Clockwise reverse flag.
@@ -171,18 +171,18 @@ class G29:
             force (float, optional): 0..1 main force.
 
         Raises:
-            ValueError: cw_angle must be between 0 and 255
-            ValueError: ccw_angle must be between 0 and 255
+            ValueError: cw_position must be between 0 and 1
+            ValueError: ccw_position must be between 0 and 1
             ValueError: cw_proportion must be between 0 and 1
             ValueError: ccw_proportion must be between 0 and 1
             ValueError: force must be between 0 and 1
         """
         if slot not in (1, 2, 3, 4):
             raise ValueError("slot must be between 1 and 4")
-        if cw_angle < 0 or cw_angle > 255:
-            raise ValueError("cw_angle must be between 0 and 255")
-        if ccw_angle < 0 or ccw_angle > 255:
-            raise ValueError("ccw_angle must be between 0 and 255")
+        if cw_position < 0 or cw_position > 1:
+            raise ValueError("cw_position must be between 0 and 1")
+        if ccw_position < 0 or ccw_position > 1:
+            raise ValueError("ccw_position must be between 0 and 1")
         if cw_proportion < 0 or cw_proportion > 1:
             raise ValueError("cw_proportion must be between 0 and 1")
         if ccw_proportion < 0 or ccw_proportion > 1:
@@ -190,6 +190,8 @@ class G29:
         if force < 0 or force > 1:
             raise ValueError("force must be between 0 and 1")
 
+        cw_position = round(int(cw_position * 255))
+        ccw_position = round(int(ccw_position * 255))
         cw_proportion = round(int(cw_proportion * 15))
         ccw_proportion = round(int(ccw_proportion * 15))
         cw_reverse = 0x1 if cw_reverse else 0x0
@@ -203,15 +205,15 @@ class G29:
         log.debug(
             "anticenter: %s %s %s %s %s %s %s %s",
             slot,
-            cw_angle,
-            ccw_angle,
+            cw_position,
+            ccw_position,
             cw_proportion,
             ccw_proportion,
             cw_reverse,
             ccw_reverse,
             force,
         )
-        msg = [slot_command | 0x01, 0x01, cw_angle, ccw_angle, proportion_byte, reverse_byte, force]
+        msg = [slot_command | 0x01, 0x01, cw_position, ccw_position, proportion_byte, reverse_byte, force]
         self.device.write(bytes(msg))
 
     def autocenter_off(self):

@@ -10,27 +10,27 @@ CCW_PROPORTION = 0.5
 FORCE = 0.2
 HOLD_SECONDS = 1.0
 
-# Sweep equal clockwise / anti-clockwise angles across the byte range.
-ANGLES = [0, 32, 64, 96, 128, 160, 192, 224, 255, 224, 192, 160, 128, 96, 64, 32, 0]
+# Sweep equal clockwise / anti-clockwise positions across the normalized range.
+POSITIONS = [0.0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1.0, 0.875, 0.75, 0.625, 0.5, 0.375, 0.25, 0.125, 0.0]
 
 
 def main():
     g29 = G29()
     g29.set_range(RANGE)
 
-    print("Sweeping anticenter angles. Press Ctrl+C to stop.", flush=True)
+    print("Sweeping anticenter positions. Press Ctrl+C to stop.", flush=True)
 
     try:
-        for angle in ANGLES:
+        for position in POSITIONS:
             print(
-                f"angle={angle} cw_proportion={CW_PROPORTION} "
+                f"position={position:.3f} cw_proportion={CW_PROPORTION} "
                 f"ccw_proportion={CCW_PROPORTION} force={FORCE}",
                 flush=True,
             )
             g29.set_anticenter(
                 slot=SLOT,
-                cw_angle=angle,
-                ccw_angle=angle,
+                cw_position=position,
+                ccw_position=position,
                 cw_proportion=CW_PROPORTION,
                 ccw_proportion=CCW_PROPORTION,
                 force=FORCE,
