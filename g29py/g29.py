@@ -5,13 +5,42 @@ import copy
 import logging as log
 from .params import *
 
+EMPTY_STATE_TEMPLATE = {
+    "steering": 0.0,
+    "accelerator": -1.0,
+    "clutch": -1.0,
+    "brake": -1.0,
+    "buttons": {
+        "right_paddle": 0,
+        "left_paddle": 0,
+        "up": 0,
+        "down": 0,
+        "left": 0,
+        "right": 0,
+        "X": 0,
+        "O": 0,
+        "S": 0,
+        "T": 0,
+        "R2": 0,
+        "R3": 0,
+        "L2": 0,
+        "L3": 0,
+        "Share": 0,
+        "Options": 0,
+        "+": 0,
+        "-": 0,
+        "PS": 0,
+        "back": 0,
+    },
+}
+
 class G29:
     def __init__(self):
         self.connected = False
         self.cache = None
         self.state_lock = threading.Lock()
         self.events = []
-        self.state = self.make_empty_state()
+        self.state = copy.deepcopy(EMPTY_STATE_TEMPLATE)
         self.pump_thread = None
         try:
             device = hid.Device(VENDOR_ID, PRODUCT_ID)
@@ -264,36 +293,6 @@ class G29:
             self.append_dial_events(byte_array[BUTTON_MISC2])
             self.state = new_state
 
-    def make_empty_state(self):
-        return {
-            "steering": 0.0,
-            "accelerator": -1.0,
-            "clutch": -1.0,
-            "brake": -1.0,
-            "buttons": {
-                "right_paddle": 0,
-                "left_paddle": 0,
-                "up": 0,
-                "down": 0,
-                "left": 0,
-                "right": 0,
-                "X": 0,
-                "O": 0,
-                "S": 0,
-                "T": 0,
-                "R2": 0,
-                "R3": 0,
-                "L2": 0,
-                "L3": 0,
-                "Share": 0,
-                "Options": 0,
-                "+": 0,
-                "-": 0,
-                "PS": 0,
-                "back": 0,
-            },
-        }
-
     def append_button_events(self, old_buttons, new_buttons):
         for control, old_value in old_buttons.items():
             new_value = new_buttons[control]
@@ -311,7 +310,7 @@ class G29:
             self.events.append({"type": "dial", "delta": -1})
 
     def decode_packet(self, byte_array):
-        state = self.make_empty_state()
+        state = copy.deepcopy(EMPTY_STATE_TEMPLATE)
         state["steering"] = self.calc_steering(
             byte_array[STEERING_COARSE],
             byte_array[STEERING_FINE],
