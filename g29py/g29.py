@@ -51,8 +51,8 @@ class G29:
         self.device = device
         self.connected = True
 
-    # TODO(seanp): Why is reset not working?
     def reset(self):
+        """Run the wheel calibration/reset sequence."""
         # wheel calibration
         self.device.write(bytes([0xf8, 0x0a, 0x00, 0x00, 0x00, 0x00, 0x00]))
         self.device.write(bytes([0xf8, 0x09, 0x05, 0x01, 0x01, 0x00, 0x00]))
@@ -215,19 +215,18 @@ class G29:
         self.device.write(bytes(msg))
 
     def autocenter_off(self):
-        """Turns off autocentering"""
+        """Disable simple autocenter."""
         msg = [0xf5, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
         self.device.write(bytes(msg))
 
-    # slot 0-4, or 0xf3 for all
     def force_off(self, slot=0xf3):
-        """_summary_
+        """Disable active force effects.
 
         Args:
-            slot (hexadecimal, optional): Defaults to 0xf3.
+            slot (int, optional): Effect slot or off-mask. `0xf3` clears all.
 
         Raises:
-            ValueError: slot must be between 0 and 4 or 0xf3
+            ValueError: slot must be between 0 and 4 or 0xf3.
         """
         if slot < 0 or slot > 4 and slot !=0xf3:
             raise ValueError("force_off slot must be between 0 and 4 or 0xf3")
@@ -253,6 +252,7 @@ class G29:
         return dat
 
     def listen(self, timeout=10):
+        """Start the background read loop."""
         if self.pump_thread is not None and self.pump_thread.is_alive():
             return
         self.pump_thread = threading.Thread(target=self.pump, args=(timeout,))
@@ -263,6 +263,7 @@ class G29:
             self.read(timeout)
 
     def stop(self):
+        """Stop the background read loop."""
         if self.pump_thread is None:
             return
         if not self.pump_thread.is_alive():
