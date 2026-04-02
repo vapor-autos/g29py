@@ -266,6 +266,7 @@ class G29:
         if not self.pump_thread.is_alive():
             self.pump_thread = None
             return
+        self.connected = False
         self.pump_thread.join()
         self.pump_thread = None
 
