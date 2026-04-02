@@ -23,26 +23,23 @@ sudo apt install libusb-1.0-0-dev libudev-dev
 ```python
 from g29py import G29
 g29 = G29()
-```
 
-```python
-# write 
+# write
 g29.set_range(500)
 g29.set_friction(0.5)
 g29.set_autocenter(ccw_proportion=0.5, cw_proportion=0.5, force=0.5)
-```
 
-```python
 # read
-g29.listen() # thread
-while 1:
+g29.listen()
+while True:
     state = g29.get_state()
     events = g29.get_events()
     print("steering:", state["steering"])
     print("brake:", state["brake"])
-    print("accelerator", state["accelerator"])
+    print("accelerator:", state["accelerator"])
     print("X:", state["buttons"]["X"])
-    print("events:", events)
+    if events:
+        print("events:", events)
 ```
 
 ## Read
