@@ -260,7 +260,7 @@ class G29:
         while self.connected:
             self.read(timeout)
 
-    def stop_pumping(self):
+    def stop(self):
         if self.pump_thread is None:
             return
         if not self.pump_thread.is_alive():
@@ -269,9 +269,6 @@ class G29:
         self.connected = False
         self.pump_thread.join()
         self.pump_thread = None
-
-    def stop(self):
-        self.stop_pumping()
 
     def get_state(self):
         if not self.connected:
