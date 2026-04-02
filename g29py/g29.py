@@ -270,6 +270,9 @@ class G29:
         self.pump_thread.join()
         self.pump_thread = None
 
+    def stop(self):
+        self.stop_pumping()
+
     def get_state(self):
         if not self.connected:
             raise Exception("G29 not connected")
