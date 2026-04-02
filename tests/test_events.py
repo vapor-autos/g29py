@@ -122,3 +122,27 @@ def test_update_state_emits_dial_left_event():
     g29.update_state(packet)
 
     assert g29.get_events() == [{"type": "dial", "delta": -1}]
+
+
+def test_stop_stops_listener_thread():
+    g29 = make_test_g29()
+    g29.pump_thread = None
+    started = threading.Event()
+
+    def fake_read(_timeout):
+        started.set()
+        while g29.connected:
+            started.wait(0.01)
+
+    g29.read = fake_read
+    g29.listen(timeout=1)
+
+    assert started.wait(0.1)
+
+    assert g29.pump_thread is not None
+    assert g29.pump_thread.is_alive()
+
+    g29.stop()
+
+    assert g29.connected is False
+    assert g29.pump_thread is None
