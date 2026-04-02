@@ -11,34 +11,7 @@ class G29:
         self.cache = None
         self.state_lock = threading.Lock()
         self.events = []
-        self.state = {
-            "steering": 0.0,
-            "accelerator": -1.0,
-            "clutch": -1.0,
-            "brake": -1.0,
-            "buttons": {
-                "right_paddle": 0,
-                "left_paddle": 0,
-                "up": 0,
-                "down": 0,
-                "left": 0,
-                "right": 0,
-                "X": 0,
-                "O": 0,
-                "S": 0,
-                "T": 0,
-                "R2": 0,
-                "R3": 0,
-                "L2": 0,
-                "L3": 0,
-                "Share": 0,
-                "Options": 0,
-                "+": 0,
-                "-": 0,
-                "PS": 0,
-                "back": 0,
-            }
-        }
+        self.state = self.make_empty_state()
         self.pump_thread = None
         try:
             device = hid.Device(VENDOR_ID, PRODUCT_ID)
@@ -291,31 +264,12 @@ class G29:
             self.append_dial_events(byte_array[BUTTON_MISC2])
             self.state = new_state
 
-    def append_button_events(self, old_buttons, new_buttons):
-        for control, old_value in old_buttons.items():
-            new_value = new_buttons[control]
-            if old_value == new_value:
-                continue
-            if new_value:
-                self.events.append({"type": "button_down", "control": control})
-            else:
-                self.events.append({"type": "button_up", "control": control})
-
-    def append_dial_events(self, misc2_value):
-        if misc2_value == MISC2_TRACK_RIGHT:
-            self.events.append({"type": "dial", "delta": 1})
-        elif misc2_value == MISC2_TRACK_LEFT:
-            self.events.append({"type": "dial", "delta": -1})
-
-    def decode_packet(self, byte_array):
-        state = {
-            "steering": self.calc_steering(
-                byte_array[STEERING_COARSE],
-                byte_array[STEERING_FINE],
-            ),
-            "accelerator": self.calc_pedal(byte_array[PEDAL_ACCELERATOR]),
-            "clutch": self.calc_pedal(byte_array[PEDAL_CLUTCH]),
-            "brake": self.calc_pedal(byte_array[PEDAL_BRAKE]),
+    def make_empty_state(self):
+        return {
+            "steering": 0.0,
+            "accelerator": -1.0,
+            "clutch": -1.0,
+            "brake": -1.0,
             "buttons": {
                 "right_paddle": 0,
                 "left_paddle": 0,
@@ -339,6 +293,32 @@ class G29:
                 "back": 0,
             },
         }
+
+    def append_button_events(self, old_buttons, new_buttons):
+        for control, old_value in old_buttons.items():
+            new_value = new_buttons[control]
+            if old_value == new_value:
+                continue
+            if new_value:
+                self.events.append({"type": "button_down", "control": control})
+            else:
+                self.events.append({"type": "button_up", "control": control})
+
+    def append_dial_events(self, misc2_value):
+        if misc2_value == MISC2_TRACK_RIGHT:
+            self.events.append({"type": "dial", "delta": 1})
+        elif misc2_value == MISC2_TRACK_LEFT:
+            self.events.append({"type": "dial", "delta": -1})
+
+    def decode_packet(self, byte_array):
+        state = self.make_empty_state()
+        state["steering"] = self.calc_steering(
+            byte_array[STEERING_COARSE],
+            byte_array[STEERING_FINE],
+        )
+        state["accelerator"] = self.calc_pedal(byte_array[PEDAL_ACCELERATOR])
+        state["clutch"] = self.calc_pedal(byte_array[PEDAL_CLUTCH])
+        state["brake"] = self.calc_pedal(byte_array[PEDAL_BRAKE])
         self.apply_gamepad(state, byte_array[GAME_PAD])
         self.apply_misc(state, byte_array[BUTTON_MISC])
         self.apply_plus(state, byte_array[BUTTON_PLUS])
