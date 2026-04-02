@@ -180,8 +180,8 @@ make release-test
 Examples:
 
 ```bash
-PYTHONPATH=. poetry run python -u examples/dial_events.py
-PYTHONPATH=. poetry run python scripts/test_effects.py set_friction --val 0.5 --hold 5
+poetry run python -u examples/dial_events.py
+poetry run python scripts/test_effects.py set_friction --val 0.5 --hold 5
 ```
 
 ## Support
