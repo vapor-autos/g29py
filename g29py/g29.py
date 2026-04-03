@@ -51,13 +51,13 @@ class G29:
         self.device = device
         self.connected = True
 
+    # WRITE
+
     def reset(self, wait_seconds=RESET_WAIT_SECONDS):
         """Run the wheel calibration/reset sequence."""
         self.device.write(bytes(RESET_STAGE_1))
         self.device.write(bytes(RESET_STAGE_2))
         time.sleep(wait_seconds)
-
-    # WRITE
 
     def force_constant(self, val=0.0):
         """Sets the force constant of the wheel.
