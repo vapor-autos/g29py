@@ -150,13 +150,6 @@ Current event shapes:
 | `autocenter_off`  | None                                       | None                             |
 | `force_off`       | `slot=0xf3`                                | `slot`: int off-mask / slot command (`0xf3` clears active force effects) |
 
-## Sources
-
-- Commands were originally informed by nightmode's [logitech-g29](https://github.com/nightmode/logitech-g29) node.js driver.
-- Effects/layout were cross-checked against [WiiBrew's Logitech USB steering wheel reference](https://wiibrew.org/wiki/Logitech_USB_steering_wheel).
-- HID access is provided by the Python [`hidapi`](https://pypi.org/project/hidapi/) package.
-- Behavior has also been manually verified against a real Logitech G29 on Linux.
-
 ## Development
 
 Use Python `3.9+`.
@@ -195,3 +188,10 @@ echo 'KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{idVendor}=="046d", ATTRS{idP
 sudo udevadm control --reload-rules
 sudo udevadm trigger
 ```
+
+## Sources
+
+- Commands were originally informed by nightmode's [logitech-g29](https://github.com/nightmode/logitech-g29) node.js driver.
+- Effects/layout were cross-checked against [WiiBrew's Logitech USB steering wheel reference](https://wiibrew.org/wiki/Logitech_USB_steering_wheel).
+- HID access is provided by the Python [`hidapi`](https://pypi.org/project/hidapi/) package.
+- Behavior has also been manually verified against a real Logitech G29 on Linux.
