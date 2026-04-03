@@ -2,8 +2,6 @@
 # Raw packet values are kept as ints for easier reading.
 
 # DEVICE
-NAME = "Logitech G29 Driving Force Racing Wheel"
-GUID = "030000006d0400004fc2000011010000"
 VENDOR_ID = 1133
 PRODUCT_ID = 49743
 
