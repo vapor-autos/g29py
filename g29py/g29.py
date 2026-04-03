@@ -51,12 +51,11 @@ class G29:
         self.device = device
         self.connected = True
 
-    def reset(self):
+    def reset(self, wait_seconds=RESET_WAIT_SECONDS):
         """Run the wheel calibration/reset sequence."""
-        # wheel calibration
-        self.device.write(bytes([0xf8, 0x0a, 0x00, 0x00, 0x00, 0x00, 0x00]))
-        self.device.write(bytes([0xf8, 0x09, 0x05, 0x01, 0x01, 0x00, 0x00]))
-        time.sleep(5) # wait for calibration
+        self.device.write(bytes(RESET_STAGE_1))
+        self.device.write(bytes(RESET_STAGE_2))
+        time.sleep(wait_seconds)
 
     # WRITE
 
