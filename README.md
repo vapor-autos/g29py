@@ -143,6 +143,7 @@ Current event shapes:
 
 | Method Name       | Default Parameters                         | Parameter Types                  |
 |-------------------|--------------------------------------------|----------------------------------|
+| `reset`           | `wait_seconds=5.0`                         | `wait_seconds`: float            |
 | `force_constant`  | `val=0.0`                                  | `val`: float (-1 to 1)           |
 | `set_friction`    | `val=0.5`                                  | `val`: float                     |
 | `set_range`       | `val=400`                                  | `val`: int (400-900)             |
