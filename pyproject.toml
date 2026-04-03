@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "g29py"
-version = "0.0.11"
+version = "0.0.12"
 description = "python driver for g29 wheel/pedals"
-authors = ["Soulja Sim <sean@vapor.autos>"]
+authors = ["Soulja Sim <sim@vapor.autos>"]
 readme = "README.md"
 packages = [{include = "g29py"}]
 
