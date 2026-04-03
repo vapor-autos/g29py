@@ -326,10 +326,10 @@ class G29:
         self.apply_misc2(state, byte_array[BUTTON_MISC2])
         return state
 
-    def calc_steering(self, coarse_byte, fine_byte):
-        # coarse 0-255
-        # fine 0-255
-        steering_raw = (coarse_byte << 8) | fine_byte  # 0-65535 for 16 bit integer
+    def calc_steering(self, low_byte, high_byte):
+        # low 0-255
+        # high 0-255
+        steering_raw = (high_byte << 8) | low_byte  # 0-65535 for 16 bit integer
         # scale to -1 to 1
         steering_normalized = (steering_raw / 65535.0) * 2 - 1
 
