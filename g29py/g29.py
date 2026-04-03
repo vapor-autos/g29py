@@ -406,7 +406,7 @@ class G29:
             return
         elif val == MISC2_BACK:
             state["buttons"]["back"] = 1
-        elif val == MISC_PSTATION:
+        elif val == MISC2_PS:
             state["buttons"]["PS"] = 1
         else:
             log.debug("unknown misc2 value: %s", val)

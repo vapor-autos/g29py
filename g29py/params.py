@@ -1,5 +1,5 @@
-# Description: Parameters for the Logitech G29 Driving Force Racing Wheel
-# using ints instead of heaxadecimal for easier reading
+# Logitech G29 constants.
+# Raw packet values are kept as ints for easier reading.
 
 # DEVICE
 NAME = "Logitech G29 Driving Force Racing Wheel"
@@ -7,7 +7,7 @@ GUID = "030000006d0400004fc2000011010000"
 VENDOR_ID = 1133
 PRODUCT_ID = 49743
 
-# SLOT
+# EFFECT SLOT
 SLOT_RANGE = [0x1, 0xF]
 
 # AXIS
@@ -53,8 +53,4 @@ MISC2_MINUS = 1
 MISC2_TRACK_RIGHT = 2
 MISC2_TRACK_LEFT = 4
 MISC2_BACK = 8
-MISC_PSTATION = 16
-
-# Dial
-DIAL_RANGE = 200
-DIAL_CENTER = 0
+MISC2_PS = 16
