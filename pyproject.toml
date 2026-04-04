@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "g29py"
-version = "0.0.13"
+version = "0.0.14"
 description = "python driver for g29 wheel/pedals"
 authors = ["Soulja Sim <sim@vapor.autos>"]
 license = "MIT"
