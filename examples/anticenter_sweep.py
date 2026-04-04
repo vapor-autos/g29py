@@ -7,18 +7,37 @@ RANGE = 500
 SLOT = 1
 CW_PROPORTION = 0.5
 CCW_PROPORTION = 0.5
-FORCE = 0.2
-HOLD_SECONDS = 1.0
+FORCE = 0.3
+HOLD_SECONDS = 0.06
+FINAL_CENTER_HOLD_SECONDS = 1.0
 
-# Sweep equal clockwise / anti-clockwise positions across the normalized range.
-POSITIONS = [0.0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1.0, 0.875, 0.75, 0.625, 0.5, 0.375, 0.25, 0.125, 0.0]
+CENTER = 0.5
+LEFT = 0.0
+RIGHT = 1.0
+
+
+def interpolate(start, end, steps):
+    if steps <= 1:
+        return [start]
+    return [
+        start + ((end - start) * index / (steps - 1))
+        for index in range(steps)
+    ]
+
+
+# Smooth sweep: center -> left -> right -> center.
+POSITIONS = (
+    interpolate(CENTER, LEFT, 65)
+    + interpolate(LEFT, RIGHT, 129)[1:]
+    + interpolate(RIGHT, CENTER, 65)[1:]
+)
 
 
 def main():
     g29 = G29()
     g29.set_range(RANGE)
 
-    print("Sweeping anticenter positions. Press Ctrl+C to stop.", flush=True)
+    print("Sweeping anticenter positions: center -> left -> right -> center", flush=True)
 
     try:
         for position in POSITIONS:
@@ -36,6 +55,16 @@ def main():
                 force=FORCE,
             )
             time.sleep(HOLD_SECONDS)
+        print(f"final center hold: position={CENTER:.3f}", flush=True)
+        g29.set_anticenter(
+            slot=SLOT,
+            cw_position=CENTER,
+            ccw_position=CENTER,
+            cw_proportion=CW_PROPORTION,
+            ccw_proportion=CCW_PROPORTION,
+            force=FORCE,
+        )
+        time.sleep(FINAL_CENTER_HOLD_SECONDS)
     finally:
         g29.force_off()
 
