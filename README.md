@@ -190,8 +190,8 @@ sudo udevadm trigger
 ```
 
 ## Sources
-
+- Effect behavior has been hand-checked against a real Logitech G29 on Linux; see [`docs/effect-map.md`](./docs/effect-map.md).
 - Commands were originally informed by nightmode's [logitech-g29](https://github.com/nightmode/logitech-g29) node.js driver.
 - Effects/layout were cross-checked against [WiiBrew's Logitech USB steering wheel reference](https://wiibrew.org/wiki/Logitech_USB_steering_wheel).
 - HID access is provided by the Python [`hidapi`](https://pypi.org/project/hidapi/) package.
-- Behavior has also been manually verified against a real Logitech G29 on Linux.
+
