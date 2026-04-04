@@ -152,7 +152,7 @@ Current event shapes:
 
 ## Development
 
-Use Python `3.9+`.
+Use Python `3.9+`
 
 Setup:
 

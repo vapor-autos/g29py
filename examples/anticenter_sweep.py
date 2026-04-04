@@ -8,12 +8,14 @@ SLOT = 1
 CW_PROPORTION = 0.5
 CCW_PROPORTION = 0.5
 FORCE = 0.3
-HOLD_SECONDS = 0.06
+HOLD_SECONDS = 0.02
 FINAL_CENTER_HOLD_SECONDS = 1.0
 
 CENTER = 0.5
 LEFT = 0.0
 RIGHT = 1.0
+
+STEPS_PER_HALF_SWEEP = 255
 
 
 def interpolate(start, end, steps):
@@ -25,11 +27,22 @@ def interpolate(start, end, steps):
     ]
 
 
+def build_positions(points, steps_per_half_sweep):
+    positions = []
+    for start, end in zip(points, points[1:]):
+        distance = abs(end - start)
+        steps = max(2, round((distance / 0.5) * steps_per_half_sweep))
+        segment = interpolate(start, end, steps)
+        if positions:
+            segment = segment[1:]
+        positions.extend(segment)
+    return positions
+
+
 # Smooth sweep: center -> left -> right -> center.
-POSITIONS = (
-    interpolate(CENTER, LEFT, 65)
-    + interpolate(LEFT, RIGHT, 129)[1:]
-    + interpolate(RIGHT, CENTER, 65)[1:]
+POSITIONS = build_positions(
+    [CENTER, LEFT, RIGHT, CENTER],
+    STEPS_PER_HALF_SWEEP,
 )
 
 
