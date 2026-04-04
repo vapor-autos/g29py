@@ -1,7 +1,7 @@
 # g29py
 > python driver for logitech g29 wheel/pedals
 
-![](etc/g29py.jpg)
+![](docs/media/g29.gif)
 
 ## Install
 ```bash
