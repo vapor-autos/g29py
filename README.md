@@ -19,18 +19,30 @@ sudo apt install libusb-1.0-0-dev libudev-dev
 ## Use
 
 ```python
+import time
+
 from g29py import G29
+
+
 g29 = G29()
 
-g29.set_range(500)
-g29.listen()
+try:
+    g29.set_range(500)
+    g29.set_friction(0.5)
+    g29.listen()
 
-while True:
-    state = g29.get_state()
-    events = g29.get_events()
-    print(state["steering"], state["accelerator"], state["brake"])
-    if events:
-        print(events)
+    while True:
+        state = g29.get_state()
+        events = g29.get_events()
+        print(state["steering"], state["accelerator"], state["brake"])
+        if events:
+            print(events)
+        time.sleep(0.01)
+except KeyboardInterrupt:
+    pass
+finally:
+    g29.force_off()
+    g29.stop()
 ```
 
 ## Read
@@ -194,4 +206,3 @@ sudo udevadm trigger
 - Commands were originally informed by nightmode's [logitech-g29](https://github.com/nightmode/logitech-g29) node.js driver.
 - Effects/layout were cross-checked against [WiiBrew's Logitech USB steering wheel reference](https://wiibrew.org/wiki/Logitech_USB_steering_wheel).
 - HID access is provided by the Python [`hidapi`](https://pypi.org/project/hidapi/) package.
-
