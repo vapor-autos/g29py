@@ -43,11 +43,12 @@ class G29:
         self.state = copy.deepcopy(EMPTY_STATE_TEMPLATE)
         self.pump_thread = None
         try:
-            device = hid.Device(VENDOR_ID, PRODUCT_ID)
+            device = hid.device()
+            device.open(VENDOR_ID, PRODUCT_ID)
         except Exception as exc:
             raise Exception("Device not found. Is it plugged in?") from exc
-        log.debug("Device manufacturer: %s", device.manufacturer)
-        log.debug("Product: %s", device.product)
+        log.debug("Device manufacturer: %s", device.get_manufacturer_string())
+        log.debug("Product: %s", device.get_product_string())
         self.device = device
         self.connected = True
 
