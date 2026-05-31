@@ -18,6 +18,20 @@ from g29py.params import (
 )
 
 
+class FakeDevice:
+    def __init__(self):
+        self.open_args = None
+
+    def open(self, vendor_id, product_id):
+        self.open_args = (vendor_id, product_id)
+
+    def get_manufacturer_string(self):
+        return "Logitech"
+
+    def get_product_string(self):
+        return "G29"
+
+
 def make_test_g29():
     return G29.__new__(G29)
 
@@ -63,3 +77,15 @@ def test_decode_packet_maps_known_button_values():
     assert state["buttons"]["Options"] == 1
     assert state["buttons"]["+"] == 1
     assert state["buttons"]["back"] == 1
+
+
+def test_init_opens_hidapi_device(monkeypatch):
+    fake_device = FakeDevice()
+
+    monkeypatch.setattr("g29py.g29.hid.device", lambda: fake_device)
+
+    g29 = G29()
+
+    assert fake_device.open_args == (0x046D, 0xC24F)
+    assert g29.device is fake_device
+    assert g29.connected is True
