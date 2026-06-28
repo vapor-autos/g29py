@@ -19,8 +19,8 @@ signin:
 publish: build
 	poetry publish
 udev:
-	echo 'KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="c24f", MODE="0664", GROUP="plugdev"' | sudo tee /etc/udev/rules.d/99-g29py.rules
+	echo 'SUBSYSTEM=="usb", ATTR{idVendor}=="046d", ATTR{idProduct}=="c24f", MODE="0664", GROUP="plugdev"' | sudo tee /etc/udev/rules.d/99-g29py.rules
 	sudo udevadm control --reload-rules
-	sudo udevadm trigger
+	sudo udevadm trigger --subsystem-match=usb --attr-match=idVendor=046d --attr-match=idProduct=c24f
 docker:
 	docker build -t g29py -f ./etc/Dockerfile ./

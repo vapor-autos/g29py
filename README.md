@@ -195,10 +195,10 @@ Only Logitech G29 Driving Force Racing Wheels & Pedals kit supported on linux in
 On linux, remove sudo requirements by adding udev rule.
 
 ```bash
-echo 'KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="c24f", MODE="0664", GROUP="plugdev"' \
+echo 'SUBSYSTEM=="usb", ATTR{idVendor}=="046d", ATTR{idProduct}=="c24f", MODE="0664", GROUP="plugdev"' \
     | sudo tee /etc/udev/rules.d/99-g29py.rules
 sudo udevadm control --reload-rules
-sudo udevadm trigger
+sudo udevadm trigger --subsystem-match=usb --attr-match=idVendor=046d --attr-match=idProduct=c24f
 ```
 
 ## Sources
