@@ -89,7 +89,7 @@ class G29:
         if val < 0 or val > 1:
             raise ValueError("force_fricion val must be between 0 and 1")
         # normalize to the verified working range 0-7
-        val = round(int(val * 7))
+        val = round(val * 7)
         log.debug("force_friction: %s", val)
         msg = [0x21, 0x02, val, 0x00, val, 0x00, 0x00]
         self.device.write(bytes(msg))
@@ -131,9 +131,9 @@ class G29:
         if force < 0 or force > 1:
             raise ValueError("force must be between 0 and 1")
 
-        ccw_proportion = round(int(ccw_proportion * 7))
-        cw_proportion = round(int(cw_proportion * 7))
-        force = round(int(force * 255))
+        ccw_proportion = round(ccw_proportion * 7)
+        cw_proportion = round(cw_proportion * 7)
+        force = round(force * 255)
 
         up_msg = [0x14, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
         self.device.write(bytes(up_msg))
@@ -190,13 +190,13 @@ class G29:
         if force < 0 or force > 1:
             raise ValueError("force must be between 0 and 1")
 
-        cw_position = round(int(cw_position * 255))
-        ccw_position = round(int(ccw_position * 255))
-        cw_proportion = round(int(cw_proportion * 15))
-        ccw_proportion = round(int(ccw_proportion * 15))
+        cw_position = round(cw_position * 255)
+        ccw_position = round(ccw_position * 255)
+        cw_proportion = round(cw_proportion * 15)
+        ccw_proportion = round(ccw_proportion * 15)
         cw_reverse = 0x1 if cw_reverse else 0x0
         ccw_reverse = 0x1 if ccw_reverse else 0x0
-        force = round(int(force * 255))
+        force = round(force * 255)
 
         proportion_byte = (cw_proportion << 4) | ccw_proportion
         reverse_byte = (cw_reverse << 4) | ccw_reverse
