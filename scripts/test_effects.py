@@ -109,7 +109,7 @@ def main():
         log_write("cleanup", [0xF3, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
         g29.force_off()
     elif args.command == "set_friction":
-        force = round(int(args.val * 7))
+        force = round(args.val * 7)
         log_write("write", [0x21, 0x02, force, 0x00, force, 0x00, 0x00])
         g29.set_friction(args.val)
         if args.monitor:
@@ -132,9 +132,9 @@ def main():
         log_write("cleanup", [0xF8, 0x81, reset1, reset2, 0x00, 0x00, 0x00])
         g29.set_range(args.reset_to)
     elif args.command == "set_autocenter":
-        ccw_proportion = round(int(args.ccw_proportion * 7))
-        cw_proportion = round(int(args.cw_proportion * 7))
-        force = round(int(args.force * 255))
+        ccw_proportion = round(args.ccw_proportion * 7)
+        cw_proportion = round(args.cw_proportion * 7)
+        force = round(args.force * 255)
         log_write("write", [0x14, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
         log_write(
             "write",
@@ -161,13 +161,13 @@ def main():
         log_write("cleanup", [0xF5, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
         g29.autocenter_off()
     elif args.command == "set_anticenter":
-        cw_position = round(int(args.cw_position * 255))
-        ccw_position = round(int(args.ccw_position * 255))
-        cw_proportion = round(int(args.cw_proportion * 15))
-        ccw_proportion = round(int(args.ccw_proportion * 15))
+        cw_position = round(args.cw_position * 255)
+        ccw_position = round(args.ccw_position * 255)
+        cw_proportion = round(args.cw_proportion * 15)
+        ccw_proportion = round(args.ccw_proportion * 15)
         cw_reverse = 0x1 if args.cw_reverse else 0x0
         ccw_reverse = 0x1 if args.ccw_reverse else 0x0
-        force = round(int(args.force * 255))
+        force = round(args.force * 255)
         proportion_byte = (cw_proportion << 4) | ccw_proportion
         reverse_byte = (cw_reverse << 4) | ccw_reverse
         slot_command = ((1 << (args.slot - 1)) << 4) | 0x01
