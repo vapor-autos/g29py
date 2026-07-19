@@ -53,7 +53,7 @@ def test_mid_speed_update_targets_center_and_interpolates_friction():
     g29 = FakeG29()
     config = SteeringTorqueConfig(
         park_velocity_m_s=0.0,
-        full_centering_velocity_m_s=20.0,
+        full_friction_velocity_m_s=20.0,
         park_friction=0.65,
         rolling_friction=0.25,
         park_force=0.15,

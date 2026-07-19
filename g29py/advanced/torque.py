@@ -20,7 +20,7 @@ def steering_to_effect_position(steering):
 @dataclass
 class SteeringTorqueConfig:
     park_velocity_m_s: float = 0.25
-    full_centering_velocity_m_s: float = 11.0
+    full_friction_velocity_m_s: float = 11.0
     park_friction: float = 0.65
     rolling_friction: float = 0.25
     park_force: float = 0.15
@@ -95,10 +95,10 @@ class SteeringTorqueController:
         config = self.config
         if velocity <= config.park_velocity_m_s:
             return 0.0
-        if config.full_centering_velocity_m_s <= config.park_velocity_m_s:
+        if config.full_friction_velocity_m_s <= config.park_velocity_m_s:
             return 1.0
 
-        active_range = config.full_centering_velocity_m_s - config.park_velocity_m_s
+        active_range = config.full_friction_velocity_m_s - config.park_velocity_m_s
         return clamp((velocity - config.park_velocity_m_s) / active_range, 0.0, 1.0)
 
     def _force_factor(self, velocity):

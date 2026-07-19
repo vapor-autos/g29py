@@ -16,7 +16,7 @@ def build_parser():
     parser.add_argument("--interval", type=float, default=0.05)
     parser.add_argument("--max-velocity", type=float, default=20.0)
     parser.add_argument("--park-velocity", type=float, default=0.25)
-    parser.add_argument("--full-centering-velocity", type=float, default=11.0)
+    parser.add_argument("--full-friction-velocity", type=float, default=11.0)
     parser.add_argument("--park-friction", type=float, default=0.65)
     parser.add_argument("--rolling-friction", type=float, default=0.25)
     parser.add_argument("--park-force", type=float, default=0.15)
@@ -38,7 +38,7 @@ def main():
     g29 = G29()
     config = SteeringTorqueConfig(
         park_velocity_m_s=args.park_velocity,
-        full_centering_velocity_m_s=args.full_centering_velocity,
+        full_friction_velocity_m_s=args.full_friction_velocity,
         park_friction=args.park_friction,
         rolling_friction=args.rolling_friction,
         park_force=args.park_force,
