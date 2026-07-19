@@ -5,7 +5,6 @@ from g29py import G29
 from g29py.advanced import (
     SteeringTorqueConfig,
     SteeringTorqueController,
-    accelerator_to_longitudinal_velocity_m_s,
 )
 
 
@@ -28,6 +27,10 @@ def build_parser():
 
 def accelerator_pedal(accelerator):
     return (max(-1.0, min(1.0, accelerator)) + 1.0) / 2.0
+
+
+def accelerator_to_simulated_velocity_m_s(accelerator, max_velocity_m_s=20.0):
+    return accelerator_pedal(accelerator) * max_velocity_m_s
 
 
 def main():
@@ -61,7 +64,7 @@ def main():
         while time.time() < end:
             state = g29.get_state()
             pedal = accelerator_pedal(state["accelerator"])
-            velocity = accelerator_to_longitudinal_velocity_m_s(
+            velocity = accelerator_to_simulated_velocity_m_s(
                 state["accelerator"],
                 max_velocity_m_s=args.max_velocity,
             )
@@ -76,7 +79,7 @@ def main():
                 f"velocity={velocity:.2f}m/s",
                 f"factor={command.speed_factor:.2f}",
                 f"force_factor={command.force_factor:.2f}",
-                f"anchor={command.anchor_position:.3f}",
+                f"hold={command.hold_position:.3f}",
                 f"target={command.target_position:.3f}",
                 f"force={command.force:.2f}",
                 f"friction={command.friction:.2f}",

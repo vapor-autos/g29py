@@ -3,7 +3,6 @@ import pytest
 from g29py.advanced import (
     SteeringTorqueConfig,
     SteeringTorqueController,
-    accelerator_to_longitudinal_velocity_m_s,
 )
 
 
@@ -19,18 +18,7 @@ class FakeG29:
         self.friction_calls.append(val)
 
 
-def test_accelerator_to_longitudinal_velocity_maps_full_pedal_range():
-    assert accelerator_to_longitudinal_velocity_m_s(-1.0) == pytest.approx(0.0)
-    assert accelerator_to_longitudinal_velocity_m_s(0.0) == pytest.approx(10.0)
-    assert accelerator_to_longitudinal_velocity_m_s(1.0) == pytest.approx(20.0)
-
-
-def test_accelerator_to_longitudinal_velocity_clamps_input():
-    assert accelerator_to_longitudinal_velocity_m_s(-2.0) == pytest.approx(0.0)
-    assert accelerator_to_longitudinal_velocity_m_s(2.0) == pytest.approx(20.0)
-
-
-def test_parked_update_follows_current_steering_anchor():
+def test_parked_update_holds_current_steering_position():
     g29 = FakeG29()
     controller = SteeringTorqueController(g29)
 
@@ -39,8 +27,8 @@ def test_parked_update_follows_current_steering_anchor():
     assert command.speed_factor == pytest.approx(0.0)
     assert command.force_factor == pytest.approx(0.0)
     assert command.steering_position == pytest.approx(1.0)
-    assert command.anchor_position == pytest.approx(1.0)
-    assert command.target_position == pytest.approx(command.anchor_position)
+    assert command.hold_position == pytest.approx(1.0)
+    assert command.target_position == pytest.approx(command.hold_position)
     assert command.force == pytest.approx(0.15)
     assert command.friction == pytest.approx(0.65)
     assert g29.anticenter_calls[-1]["cw_position"] == pytest.approx(command.target_position)
@@ -51,12 +39,11 @@ def test_parked_update_follows_current_steering_anchor():
 def test_full_speed_update_targets_center_with_rolling_values():
     g29 = FakeG29()
     controller = SteeringTorqueController(g29)
-    controller.reset_anchor(steering=1.0)
 
     command = controller.update(longitudinal_velocity_m_s=20.0, steering=1.0)
 
     assert command.speed_factor == pytest.approx(1.0)
-    assert command.anchor_position == pytest.approx(1.0)
+    assert command.hold_position == pytest.approx(1.0)
     assert command.target_position == pytest.approx(0.5)
     assert command.force == pytest.approx(0.7277, abs=0.0001)
     assert command.friction == pytest.approx(0.25)
@@ -73,29 +60,27 @@ def test_mid_speed_update_targets_center_and_interpolates_friction():
         rolling_force=0.75,
     )
     controller = SteeringTorqueController(g29, config=config)
-    controller.reset_anchor(steering=1.0)
 
     command = controller.update(longitudinal_velocity_m_s=10.0, steering=1.0)
 
     assert command.speed_factor == pytest.approx(0.5)
-    assert command.anchor_position == pytest.approx(1.0)
+    assert command.hold_position == pytest.approx(1.0)
     assert command.target_position == pytest.approx(0.5)
     assert command.friction == pytest.approx(0.45)
 
 
-def test_anchor_tracks_current_steering_while_rolling():
+def test_hold_position_tracks_current_steering_while_rolling():
     g29 = FakeG29()
     controller = SteeringTorqueController(g29)
-    controller.reset_anchor(steering=-1.0)
 
     rolling_command = controller.update(longitudinal_velocity_m_s=4.0, steering=1.0)
     command = controller.update(longitudinal_velocity_m_s=0.0, steering=1.0)
 
     assert rolling_command.speed_factor > 0.0
-    assert rolling_command.anchor_position == pytest.approx(1.0)
+    assert rolling_command.hold_position == pytest.approx(1.0)
     assert rolling_command.target_position == pytest.approx(0.5)
     assert command.speed_factor == pytest.approx(0.0)
-    assert command.anchor_position == pytest.approx(1.0)
+    assert command.hold_position == pytest.approx(1.0)
     assert command.target_position == pytest.approx(1.0)
 
 

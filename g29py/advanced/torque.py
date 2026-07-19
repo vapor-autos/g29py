@@ -17,12 +17,6 @@ def steering_to_effect_position(steering):
     return (clamp(steering, -1.0, 1.0) + 1.0) / 2.0
 
 
-def accelerator_to_longitudinal_velocity_m_s(accelerator, max_velocity_m_s=20.0):
-    """Map G29 accelerator state (-1..1) to simulated vehicle velocity."""
-    pedal = (clamp(accelerator, -1.0, 1.0) + 1.0) / 2.0
-    return pedal * max_velocity_m_s
-
-
 @dataclass
 class SteeringTorqueConfig:
     park_velocity_m_s: float = 0.25
@@ -43,7 +37,7 @@ class SteeringTorqueCommand:
     speed_factor: float
     force_factor: float
     steering_position: float
-    anchor_position: float
+    hold_position: float
     target_position: float
     force: float
     friction: float
@@ -55,10 +49,6 @@ class SteeringTorqueController:
     def __init__(self, g29, config=None):
         self.g29 = g29
         self.config = config or SteeringTorqueConfig()
-        self.anchor_position = CENTER_POSITION
-
-    def reset_anchor(self, steering=0.0):
-        self.anchor_position = steering_to_effect_position(steering)
 
     def update(self, longitudinal_velocity_m_s, steering):
         config = self.config
@@ -67,10 +57,10 @@ class SteeringTorqueController:
         speed_factor = self._speed_factor(velocity)
         force_factor = self._force_factor(velocity)
 
-        self.anchor_position = steering_position
+        hold_position = steering_position
 
         if speed_factor == 0.0:
-            target_position = self.anchor_position
+            target_position = hold_position
         else:
             target_position = CENTER_POSITION
 
@@ -82,7 +72,7 @@ class SteeringTorqueController:
             speed_factor=speed_factor,
             force_factor=force_factor,
             steering_position=steering_position,
-            anchor_position=self.anchor_position,
+            hold_position=hold_position,
             target_position=target_position,
             force=force,
             friction=friction,
